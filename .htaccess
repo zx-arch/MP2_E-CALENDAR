@@ -1,0 +1,12 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d 
+RewriteCond %{REQUEST_FILENAME}\.php -f 
+RewriteRule ^(.*)$ $1.php
+
+#RewriteEngine on: Mengaktifkan modul mod_rewrite pada server web Apache untuk melakukan rewriting URL.
+
+#RewriteCond %{REQUEST_FILENAME} !-d: Mengecek apakah permintaan URL tidak mengarah ke sebuah direktori yang ada. Ini memastikan bahwa peraturan rewriting hanya akan diterapkan jika direktori yang diminta tidak ada.
+
+#RewriteCond %{REQUEST_FILENAME}\.php -f: Mengecek apakah file dengan ekstensi .php ada. Jadi, ini memeriksa apakah file dengan nama yang sama dengan permintaan URL ditambahkan dengan ekstensi .php ada.
+
+#RewriteRule ^(.*)$ $1.php: Aturan rewriting yang sebenarnya. Ini akan mengubah URL yang diterima dari permintaan menjadi nama file .php yang sesuai dengan URL tersebut. Misalnya, jika URL adalah http://example.com/about, aturan ini akan mengubahnya menjadi http://example.com/about.php.
