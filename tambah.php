@@ -7,13 +7,15 @@ if (!isset($_SESSION["token_login"]) or !isset($_COOKIE['login'])) {
     header('Location: login');
 } else {
     $error_date = "";
+    $error_image = "";
 	if (isset($_POST['submit'])) {
 		if (isset($_SESSION['token_tambah'])) {
             $error_date .= $methodquery->validateDate($_POST);
-            $methodquery->insertNewData($_POST,$_SESSION['username']);
-            if ($error_date == "") {
-                header('Location: index');
-                $_SESSION['tambah_berhasil'] = true;
+            $error_image .= $methodquery->validateImage($_FILES);
+            $methodquery->insertNewData($_POST,$_FILES,$_SESSION['username']);
+            if ($error_date == "" and $error_image =="") {
+                    header('Location: index');
+                    $_SESSION['tambah_berhasil'] = true;
             }
         }
 	}
@@ -34,14 +36,15 @@ if (!isset($_SESSION["token_login"]) or !isset($_COOKIE['login'])) {
 <body>
     <h1>Tambah Agenda</h1>
     <div class="form-container">
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
             <?php $_SESSION['token_tambah'] = bin2hex(random_bytes(32)); ?>
+
             <div class="form-group">
                 <label for="nama">Nama:</label>
-                <input type="text" id="nama" name="nama" required placeholder="Masukkan nama agenda" value="<?= ($error_date != '') ? $_POST['nama'] : "" ?>">
+                <input type="text" id="nama" name="nama" required placeholder="Masukkan nama agenda" value="<?= ($error_date != '' or $error_image !='') ? $_POST['nama'] : "" ?>">
             </div>
 
-            <?php if($error_date == "") : ?>
+            <?php if($error_date == "" and !isset($_POST['submit'])) : ?>
                 <div class="form-group">
                     <label for="tgl_mulai">Tanggal mulai:</label>
                     <input type="date" id="tgl_mulai" name="tgl_mulai" required placeholder="Masukkan tgl mulai agenda">
@@ -50,7 +53,16 @@ if (!isset($_SESSION["token_login"]) or !isset($_COOKIE['login'])) {
                     <label for="tgl_selesai">Tanggal selesai:</label>
                     <input type="date" id="tgl_selesai" name="tgl_selesai" required placeholder="Masukkan tgl selesai agenda">
                 </div>
-            <?php else : ?>
+            <?php elseif($error_date == "" and isset($_POST['submit'])) : ?>
+                <div class="form-group">
+                    <label for="tgl_mulai">Tanggal mulai:</label>
+                    <input type="date" id="tgl_mulai" value="<?= $_POST['tgl_mulai']; ?>" name="tgl_mulai" required placeholder="Masukkan tgl mulai agenda">
+                </div>
+                <div class="form-group">
+                    <label for="tgl_selesai">Tanggal selesai:</label>
+                    <input type="date" id="tgl_selesai" value="<?= $_POST['tgl_mulai']; ?>"  name="tgl_selesai" required placeholder="Masukkan tgl selesai agenda">
+                </div>
+            <?php elseif($error_date != "") : ?>
                 <div class="form-group">
                     <label for="tgl_mulai">Tanggal mulai:</label>
                     <input type="date" id="tgl_mulai" name="tgl_mulai" required placeholder="Masukkan tgl mulai agenda" style="border: 1px solid red;" value="<?= ($error_date != '') ? $_POST['tgl_mulai'] : "" ?>">
@@ -63,20 +75,20 @@ if (!isset($_SESSION["token_login"]) or !isset($_COOKIE['login'])) {
 
             <div class="form-group">
                 <label>Level:</label>
-                <?php if($error_date == "") : ?>
+                <?php if($error_date == "" and !isset($_POST['submit'])) : ?>
                     <input type="radio" id="level-biasa" name="level" value="biasa"> Biasa
                     <input type="radio" id="level-sedang" name="level" value="sedang"> Sedang
                     <input type="radio" id="level-sangat_penting" name="level" value="sangat_penting"> Sangat penting
-                <?php elseif($error_date != "") : ?>
-                    <?php if($_POST['level'] == "biasa") : ?>
+                <?php elseif($error_date != "" and isset($_POST['submit'])) : ?>
+                    <?php if($_POST['level'] == "biasa" or $_POST['level'] == "Biasa") : ?>
                         <input type="radio" id="level-biasa" name="level" checked value="biasa"> Biasa
                         <input type="radio" id="level-sedang" name="level" value="sedang"> Sedang
                         <input type="radio" id="level-sangat_penting" name="level" value="sangat_penting"> Sangat penting
-                    <?php elseif($_POST['level'] == "sedang") : ?>
+                    <?php elseif($_POST['level'] == "sedang" or $_POST['level'] == "Sedang") : ?>
                         <input type="radio" id="level-biasa" name="level" value="biasa"> Biasa
                         <input type="radio" id="level-sedang" name="level" checked value="sedang"> Sedang
                         <input type="radio" id="level-sangat_penting" name="level" value="sangat_penting"> Sangat penting
-                    <?php elseif($_POST['level'] == "sangat_penting") : ?>
+                    <?php elseif($_POST['level'] == "sangat_penting" or $_POST['level'] == "Sangat_penting" or $_POST['level'] = "Sangat penting") : ?>
                         <input type="radio" id="level-biasa" name="level" value="biasa"> Biasa
                         <input type="radio" id="level-sedang" name="level" value="sedang"> Sedang
                         <input type="radio" id="level-sangat_penting" name="level" checked value="sangat_penting"> Sangat penting
@@ -86,19 +98,27 @@ if (!isset($_SESSION["token_login"]) or !isset($_COOKIE['login'])) {
         
             <div class="form-group">
                 <label for="durasi">Durasi:</label>
-                <input type="number" id="durasi_jam" required name="durasi_jam" value="<?= ($error_date != '') ? $_POST['durasi_jam'] : "" ?>"> Jam
-                <input type="number" id="durasi_menit" required name="durasi_menit" value="<?= ($error_date != '') ? $_POST['durasi_menit'] : "" ?>"> Menit
+                <input type="number" id="durasi_jam" required name="durasi_jam" value="<?= ($error_date != '' or $error_image != '') ? $_POST['durasi_jam'] : "" ?>"> Jam
+                <input type="number" id="durasi_menit" required name="durasi_menit" value="<?= ($error_date != '' or $error_image != '') ? $_POST['durasi_menit'] : "" ?>"> Menit
             </div>
 
             <div class="form-group">
                 <label for="lokasi">Lokasi:</label>
-                <textarea name="lokasi" id="lokasi" cols="20" rows="10" required placeholder="Masukkan lokasi agenda"><?= ($error_date != '') ? $_POST['lokasi'] : "" ?></textarea>
+                <textarea name="lokasi" id="lokasi" cols="20" rows="10" required placeholder="Masukkan lokasi agenda"><?= ($error_date != '' or $error_image != '') ? $_POST['lokasi'] : "" ?></textarea>
             </div>
 
-            <div class="form-group">
-                <label for="photo">Foto Profil:</label>
-                <input type="file" id="photo" name="photo">
-            </div>
+            <?php if($error_image != "") : ?>
+                <div class="form-group">
+                    <label for="gambar">Foto Profil:</label>
+                    <input type="file" style="border: 1px solid red;" id="gambar" name="gambar">
+                </div>
+            <?php else : ?>
+                <div class="form-group">
+                    <label for="gambar">Foto Profil:</label>
+                    <input type="file" id="gambar" accept="image/png, image/jpg, image/jpeg" name="gambar">
+                </div>
+            <?php endif; ?>
+
 
             <div class="form-group">
                 <input type="submit" name="submit" id="submit" value="Submit">
@@ -106,9 +126,14 @@ if (!isset($_SESSION["token_login"]) or !isset($_COOKIE['login'])) {
             </div>
         </form>
 
+        <?php if($error_image != "") : ?>
+            <p style="color: red; font-style: italic;"><?= $error_image; ?></p>
+        <?php endif; ?>
+
         <?php if($error_date != "") : ?>
             <p style="color: red; font-style: italic;"><?= $error_date; ?></p>
         <?php endif; ?>
+
     </div>
 </body>
 

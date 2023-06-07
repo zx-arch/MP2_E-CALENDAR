@@ -11,7 +11,7 @@ if (isset($_POST['submit'])) {
     if ($check == true) {
         $_SESSION['token_login'] = bin2hex(random_bytes(32));
         $_SESSION['username'] = $_POST['username']; 
-        setcookie('login','time_login',time()+3600);
+        setcookie('login','time_login',time()+3600*24);
         header('Location: index');
     } else {
         header('Location: login');

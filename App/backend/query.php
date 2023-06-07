@@ -7,6 +7,7 @@ class MethodQuery {
 
     public function __construct() {
         $this->error_date = "";
+        $this->error_image = "";
     }
 
     public function getAll($account) {
@@ -56,41 +57,97 @@ class MethodQuery {
     public function validateDate($data) {
         $gettahunmulai = (int) explode('-',$data['tgl_mulai'])[0];
         $getbulanmulai = (int) explode('-',$data['tgl_mulai'])[1];
-        $getharimulai = (int) explode('-',$data['tgl_mulai'])[2];
+        $gettglmulai = (int) explode('-',$data['tgl_mulai'])[2];
 
         $gettahunselesai = (int) explode('-',$data['tgl_selesai'])[0];
         $getbulanselesai = (int) str_replace("0","",explode('-',$data['tgl_selesai'])[1]);
-        $gethariselesai = (int) str_replace("0","",explode('-',$data['tgl_selesai'])[2]);
-            
-
-        if ($gettahunselesai < $gettahunmulai) {
-            $this->error_date .= "* Tahun dari tanggal selesai lebih besar dari tahun mulai<br>";
+        $gettglselesai = (int) str_replace("0","",explode('-',$data['tgl_selesai'])[2]);
+        if ($gettglmulai < (int) date('d')) {
+            $this->error_date .= "* Tanggal mulai minimal tanggal hari ini<br>";
+        }
+        if ($gettglselesai < $gettglmulai) {
+            $this->error_date .= "* Tanggal selesai lebih besar dari tanggal mulai<br>";
+        }
+        if ($gettglselesai < (int) date('d')) {
+            $this->error_date .= "* Tanggal selesai minimal tanggal hari ini<br>";
         } else {
-            if ($getbulanselesai < $getbulanmulai) {
-            $this->error_date .= "* Bulan dari tanggal selesai lebih besar dari tahun mulai<br>";
-            } 
-            if ($gethariselesai < $getharimulai) {
-                $this->error_date .= "* Hari dari tanggal selesai lebih besar dari tahun mulai";
+            if ($gettahunselesai < $gettahunmulai) {
+                $this->error_date .= "* Tahun dari tanggal selesai lebih besar dari tahun mulai<br>";
+            } else {
+                if ($getbulanselesai < $getbulanmulai) {
+                $this->error_date .= "* Bulan dari tanggal selesai lebih besar dari tahun mulai<br>";
+                }
             }
         }
+
         return $this->error_date;
     }
 
-    public function insertNewData($data, $user) {
+    public function validateImage($gbr) {
+        if (!empty($gbr)) {
+
+            if ($gbr['gambar']['type'] != 'image/jpeg' and $gbr['gambar']['type'] != 'image/jpg' and $gbr['gambar']['type'] != 'image/png') {
+                $this->error_image .= "* File Gambar Harus PNG atau JPG<br>";
+            }
+
+            if ($gbr['gambar']['size'] > 512000) {
+                $this->error_image .= "* Ukuran Gambar Maksimal 512 KB<br>";
+            }
+            return $this->error_image;
+        }
+    }
+
+    public function insertNewData($data, $gbr, $user) {
         global $mysqli;
         $durasi = (int) $data['durasi_jam']*60 + (int) $data['durasi_menit'];
+
         if ($this->error_date == "") {
+            if (empty($gbr)) {
             $query = 
-            "INSERT INTO activity(nama,tgl_mulai,tgl_selesai,`level`,durasi,lokasi,username) VALUES (
-                '".$data['nama']."',
-                '".$data['tgl_mulai']."',
-                '".$data['tgl_selesai']."',
-                '".$data['level']."',
-                '$durasi',
-                '".$data['lokasi']."',
-                '$user'
-            )";
-            return $mysqli->query($query);
+                "INSERT INTO activity(nama,tgl_mulai,tgl_selesai,`level`,durasi,lokasi,username) VALUES (
+                    '".$data['nama']."',
+                    '".$data['tgl_mulai']."',
+                    '".$data['tgl_selesai']."',
+                    '".$data['level']."',
+                    '$durasi',
+                    '".$data['lokasi']."',
+                    '$user'
+                )";
+                return $mysqli->query($query);
+            } else {
+
+                $namagbr = explode('.',$gbr['gambar']['name'])[0];
+                $ekstensigbr = explode('.',$gbr['gambar']['name'])[count(explode('.',$gbr['gambar']['name']))-1];
+
+                if ($gbr['gambar']['type'] == 'image/jpeg' or $gbr['gambar']['type'] == 'image/jpg' or $gbr['gambar']['type'] == 'image/png') {
+                    if ($gbr['gambar']['size'] <= 512000) {
+                        $uniqname = $namagbr.bin2hex(random_bytes(16)).'-'.rand().'.'.$ekstensigbr;
+
+                        if ($data['level'] == 'biasa') {
+                            $data['level'] = "Biasa";
+                        } elseif($data['level'] == 'sedang')  {
+                            $data['level'] = 'Sedang';
+                        } elseif($data['level'] == 'sangat_penting') {
+                            $data['level'] = 'Sangat penting';
+                        }
+
+                        
+                        move_uploaded_file($gbr['gambar']['tmp_name'],'App/img/'.$uniqname);
+                        $query = 
+                            "INSERT INTO activity(nama,tgl_mulai,tgl_selesai,`level`,durasi,lokasi,gambar,username) VALUES (
+                                '".$data['nama']."',
+                                '".$data['tgl_mulai']."',
+                                '".$data['tgl_selesai']."',
+                                '".$data['level']."',
+                                '$durasi',
+                                '".$data['lokasi']."',
+                                '$uniqname',
+                                '$user'
+                            )";
+                        return $mysqli->query($query);
+                    }
+                }
+            }
         }
     }
 }
