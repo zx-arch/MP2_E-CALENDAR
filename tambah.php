@@ -3,7 +3,7 @@
 require_once "App/backend/query.php";
 $methodquery = new MethodQuery();
 
-if (!isset($_SESSION["token_login"]) or !isset($_COOKIE['login'])) {
+if (!isset($_SESSION["token_login"])) {
     header('Location: login');
 } else {
     $error_date = "";

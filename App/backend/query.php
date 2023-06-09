@@ -10,14 +10,29 @@ class MethodQuery {
         $this->error_image = "";
     }
 
-    public function getAll($account, $tgl) {
-        // SELECT * FROM `activity` WHERE tgl_mulai LIKE '2023-06%' and tgl_selesai LIKE '2023-07%' and username='qwertyuiop12';
+    public function getAll($account) {
+		global $mysqli;
+		$query="SELECT * FROM activity WHERE username='$account'";
+		$data=array();
+		$result=$mysqli->query($query);
+        return $result;
+	}
+
+    public function getDataByDate($account, $tgl) {
 		global $mysqli;
 		$query="SELECT * FROM activity WHERE username='$account' and tgl_mulai LIKE '$tgl%'";
 		$data=array();
 		$result=$mysqli->query($query);
         return $result;
 	}
+
+    public function getDataById($account, $id) {
+		global $mysqli;
+		$query="SELECT * FROM activity WHERE username='$account' and id='$id'";
+		$data=array();
+		$result=$mysqli->query($query);
+        return $result;
+    }
 
     public function checkAccount($username) {
 		global $mysqli;

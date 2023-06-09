@@ -34,7 +34,7 @@ function generateCalendar() {
         }
         calendarBody.appendChild(row);
     }
-    document.getElementById("showData").innerHTML = "Agenda bulan "+calendarHeader.innerHTML;
+    document.getElementById("showData").innerHTML = "Agenda bulan " + calendarHeader.innerHTML;
 }
 
 
@@ -76,12 +76,12 @@ function getMonthName(monthIndex) {
 
 generateCalendar();
 
-document.getElementById("showData").addEventListener('click', function(e) {
+document.getElementById("showData").addEventListener('click', function (e) {
     window.location.href = 'index?data=' + encodeURIComponent(getMonthName(currentMonth)) + "-" + encodeURIComponent(currentYear);
-    
+
     document.getElementById("formSearch").submit();
 });
 
-document.getElementById("hiddenData").addEventListener('click', function() {
+document.getElementById("hiddenData").addEventListener('click', function () {
     document.getElementByClassName("table-container")[0].innerHTML = "";
 });

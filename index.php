@@ -35,6 +35,10 @@ if (!isset($_SESSION["token_login"])) {
 		$data = $methodquery->getAll($_SESSION['username'], $getdate);
 	}
 
+	if (isset($_POST['detail'])) {
+		$_SESSION['detailditekan'] = true;
+	}
+									
 }
 
 ?>
@@ -127,7 +131,18 @@ if (!isset($_SESSION["token_login"])) {
 									<td><?= $dt['level']; ?></td>
 									<td><?= round($dt['durasi']/60,0); ?> Jam <?= $dt['durasi']%60; ?> Menit</td>
 									<td><?= $dt['lokasi']; ?></td>
-									<td><a href="">Detail</a> | <a href="">Delete</a></td>
+									<td>
+										<div class="form-action">
+											<form action="detail" method="post">
+												<input type="hidden" name="id" value="<?= $dt['id']; ?>">
+												<input type="submit" name="detail" id="detail" class="btn-orange" value="Detail">
+											</form>
+											<form action="delete" method="post">
+												<input type="submit" class="btn-green" value="Delete">
+											</form>
+										</div>
+									</td>
+									<!-- <td><a href="">Detail</a> | <a href="">Delete</a></td> -->
 								</tr>
 							<?php endforeach; ?>
 						</tbody>
