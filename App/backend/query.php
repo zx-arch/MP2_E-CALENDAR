@@ -10,9 +10,10 @@ class MethodQuery {
         $this->error_image = "";
     }
 
-    public function getAll($account) {
+    public function getAll($account, $tgl) {
+        // SELECT * FROM `activity` WHERE tgl_mulai LIKE '2023-06%' and tgl_selesai LIKE '2023-07%' and username='qwertyuiop12';
 		global $mysqli;
-		$query="SELECT * FROM activity WHERE username='$account'";
+		$query="SELECT * FROM activity WHERE username='$account' and tgl_mulai LIKE '$tgl%'";
 		$data=array();
 		$result=$mysqli->query($query);
         return $result;
@@ -61,14 +62,14 @@ class MethodQuery {
 
         $gettahunselesai = (int) explode('-',$data['tgl_selesai'])[0];
         $getbulanselesai = (int) str_replace("0","",explode('-',$data['tgl_selesai'])[1]);
-        $gettglselesai = (int) str_replace("0","",explode('-',$data['tgl_selesai'])[2]);
-        if ($gettglmulai < (int) date('d')) {
+        $gettglselesai = (int) explode('-',$data['tgl_selesai'])[2];
+        if ($gettglmulai < (int) date('d') and $getbulanmulai == (int) date('m')) {
             $this->error_date .= "* Tanggal mulai minimal tanggal hari ini<br>";
         }
         if ($gettglselesai < $gettglmulai) {
             $this->error_date .= "* Tanggal selesai lebih besar dari tanggal mulai<br>";
         }
-        if ($gettglselesai < (int) date('d')) {
+        if ($gettglselesai < (int) date('d') and $getbulanmulai == (int) date('m')) {
             $this->error_date .= "* Tanggal selesai minimal tanggal hari ini<br>";
         } else {
             if ($gettahunselesai < $gettahunmulai) {
@@ -103,8 +104,8 @@ class MethodQuery {
 
         if ($this->error_date == "") {
             if (empty($gbr)) {
-            $query = 
-                "INSERT INTO activity(nama,tgl_mulai,tgl_selesai,`level`,durasi,lokasi,username) VALUES (
+                $query = 
+                    "INSERT INTO activity(nama,tgl_mulai,tgl_selesai,`level`,durasi,lokasi,username) VALUES (
                     '".$data['nama']."',
                     '".$data['tgl_mulai']."',
                     '".$data['tgl_selesai']."',

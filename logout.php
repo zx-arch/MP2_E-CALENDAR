@@ -6,6 +6,4 @@ $_SESSION = [];
 session_unset();
 session_destroy();
 
-$script = "<script>
-window.location = '".BASEURL."';</script>";
-echo $script;
+header('Location: login');

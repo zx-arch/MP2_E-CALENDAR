@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 06, 2023 at 06:36 PM
+-- Generation Time: Jun 09, 2023 at 11:20 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -38,6 +38,14 @@ CREATE TABLE `activity` (
   `gambar` varchar(100) NOT NULL,
   `username` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `activity`
+--
+
+INSERT INTO `activity` (`id`, `nama`, `tgl_mulai`, `tgl_selesai`, `level`, `durasi`, `lokasi`, `gambar`, `username`) VALUES
+(1, 'Memancing', '2023-06-10', '2023-07-10', 'Sedang', 182, 'Jl. Selokan Mataram, Demangan, Maguwoharjo, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281', '6379607bda229b72e76025869512cb34f4eba5-651657583.jpg', 'qwertyuiop12'),
+(2, 'Belajar', '2023-07-03', '2023-07-07', 'Sangat penting', 185, '-', '637960de0da2bc82eda4b77f33e07188ecff13-452857883.jpg', 'qwertyuiop12');
 
 -- --------------------------------------------------------
 
@@ -83,7 +91,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `activity`
 --
 ALTER TABLE `activity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`

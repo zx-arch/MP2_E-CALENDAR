@@ -11,7 +11,9 @@ if (!isset($_SESSION["token_login"]) or !isset($_COOKIE['login'])) {
 	if (isset($_POST['submit'])) {
 		if (isset($_SESSION['token_tambah'])) {
             $error_date .= $methodquery->validateDate($_POST);
-            $error_image .= $methodquery->validateImage($_FILES);
+            if (!empty($_FILES)) {
+                $error_image .= $methodquery->validateImage($_FILES);
+            }
             $methodquery->insertNewData($_POST,$_FILES,$_SESSION['username']);
             if ($error_date == "" and $error_image =="") {
                     header('Location: index');
@@ -115,7 +117,7 @@ if (!isset($_SESSION["token_login"]) or !isset($_COOKIE['login'])) {
             <?php else : ?>
                 <div class="form-group">
                     <label for="gambar">Foto Profil:</label>
-                    <input type="file" id="gambar" accept="image/png, image/jpg, image/jpeg" name="gambar">
+                    <input type="file" id="gambar" name="gambar">
                 </div>
             <?php endif; ?>
 
