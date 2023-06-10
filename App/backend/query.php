@@ -166,4 +166,10 @@ class MethodQuery {
             }
         }
     }
+
+    public function delete($data) {
+        global $mysqli;
+        $query = 'DELETE FROM `activity` WHERE `activity`.`id` = '.$data.'';
+        return $mysqli->query($query);
+    }
 }
