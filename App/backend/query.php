@@ -167,7 +167,7 @@ class MethodQuery {
         }
     }
     
-    public function updateData($data)
+    public function updateData($data, $gbr)
     {
         global $mysqli;
         $id = $data['id'];
@@ -179,14 +179,43 @@ class MethodQuery {
         $durasi_menit = $data['durasi_menit'];
         $lokasi = $data['lokasi'];
 
-        $query = "UPDATE `activity` SET `nama` = '$nama', 
+        // update ke data base 
+        $query = "UPDATE `activity` SET 
+        `nama` = '$nama', 
         `tgl_mulai` = '$tgl_mulai',  
         `tgl_selesai` = '$tgl_selesai', 
         `level` = '$level', 
-        `durasi` = '$durasi',  
+        `durasi` = '$durasi',   
         `lokasi` = '$lokasi'
         WHERE `activity`.`id` = $id";
-        return $mysqli->query($query);
+        $mysqli->query($query);
+
+        // update dengan gambar 
+        if (!empty($gbr)) {
+            $namagbr = explode('.',$gbr['gambar']['name'])[0];
+            $ekstensigbr = explode('.',$gbr['gambar']['name'])[count(explode('.',$gbr['gambar']['name']))-1];
+
+            if ($gbr['gambar']['type'] == 'image/jpeg' or $gbr['gambar']['type'] == 'image/jpg' or $gbr['gambar']['type'] == 'image/png') {
+                if ($gbr['gambar']['size'] <= 512000) {
+                    $uniqname = $namagbr.bin2hex(random_bytes(16)).'-'.rand().'.'.$ekstensigbr;
+                    
+                    move_uploaded_file($gbr['gambar']['tmp_name'],'App/img/'.$uniqname);
+
+                    $query = "UPDATE `activity` SET 
+                    `nama` = '$nama', 
+                    `tgl_mulai` = '$tgl_mulai',  
+                    `tgl_selesai` = '$tgl_selesai', 
+                    `level` = '$level', 
+                    `durasi` = '$durasi',  
+                    `gambar` = '$uniqname',  
+                    `lokasi` = '$lokasi'
+                    WHERE `activity`.`id` = $id";
+
+                    return $mysqli->query($query);
+                }
+            }
+        }
+
     }
 
     public function delete($data) {
