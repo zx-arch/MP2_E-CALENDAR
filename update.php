@@ -26,7 +26,8 @@ if (!isset($_SESSION["token_login"])) {
 
     <h1>Update Agenda</h1>
     <div class="form-container">
-        <form action="" method="post">    
+        <form action="prosesUpdate" method="post">    
+            <?php $_SESSION['token_update'] = bin2hex(random_bytes(32)); ?>
             <div class="form-group">
                 <label for="nama">Nama:</label>
                 <input type="text" name="nama" id="nama" value="<?= $data['nama'] ?>">
@@ -77,12 +78,12 @@ if (!isset($_SESSION["token_login"])) {
             </div>
 
             <div class="form-group" style="float: left;margin-right: 10px;">
+                <input type="hidden" name="id" id="id" value="<?= $data['id']; ?>">
                 <input type="submit" name="simpan" id="simpan" value="Simpan">
             </div>
         </form>
         
         <form action="detail" method="post">
-            <input type="hidden" name="id" id="id" value="<?= $data['id']; ?>">
             <input type="submit" class="button-back" value="Kembali">
         </form>
 

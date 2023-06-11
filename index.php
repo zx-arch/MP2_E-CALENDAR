@@ -137,6 +137,7 @@ if (!isset($_SESSION["token_login"])) {
 												<input type="hidden" name="id" value="<?= $dt['id']; ?>">
 												<input type="submit" name="detail" id="detail" class="btn-orange" value="Detail">
 											</form>
+											
 											<form action="delete" method="post">
                                                 <?php $_SESSION['token_hapus'] = bin2hex(random_bytes(32)); ?>
                                                 <input type="hidden" name="id" value="<?= $dt['id']; ?>">

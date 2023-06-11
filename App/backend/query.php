@@ -166,6 +166,28 @@ class MethodQuery {
             }
         }
     }
+    
+    public function updateData($data)
+    {
+        global $mysqli;
+        $id = $data['id'];
+        $nama = $data['nama'];
+        $tgl_mulai = $data['tgl_mulai'];
+        $tgl_selesai = $data['tgl_selesai'];
+        $level = $data['level'];
+        $durasi = (int) $data['durasi_jam']*60 + (int) $data['durasi_menit'];
+        $durasi_menit = $data['durasi_menit'];
+        $lokasi = $data['lokasi'];
+
+        $query = "UPDATE `activity` SET `nama` = '$nama', 
+        `tgl_mulai` = '$tgl_mulai',  
+        `tgl_selesai` = '$tgl_selesai', 
+        `level` = '$level', 
+        `durasi` = '$durasi',  
+        `lokasi` = '$lokasi'
+        WHERE `activity`.`id` = $id";
+        return $mysqli->query($query);
+    }
 
     public function delete($data) {
         global $mysqli;
