@@ -223,4 +223,25 @@ class MethodQuery {
         $query = 'DELETE FROM `activity` WHERE `activity`.`id` = '.$data.'';
         return $mysqli->query($query);
     }
+
+    public function getRentangTanggal($account) {
+        global $mysqli;
+        $query = "SELECT tgl_mulai, tgl_selesai FROM activity WHERE username='$account'";
+        $result = $mysqli->query($query);
+        $data = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $tgl_mulai = explode('-', $row['tgl_mulai']);
+                $tgl_selesai = explode('-', $row['tgl_selesai']);
+                $data[] = [
+                    'tahun' => (int) $tgl_mulai[0],
+                    'bulan' => (int) $tgl_mulai[1] - 1, // Mengurangi 1 karena index bulan dimulai dari 0
+                    'tgl_mulai' => (int) $tgl_mulai[2],
+                    'tgl_selesai' => (int) $tgl_selesai[2]
+                ];
+            }
+        }
+        return $data;
+    }
+
 }
