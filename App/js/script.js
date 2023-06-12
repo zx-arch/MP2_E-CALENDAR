@@ -52,7 +52,7 @@ function generateCalendar() {
                                 cell.style.background = 'lightblue';
                                 break; // Hentikan perulangan jika gaya sudah diberikan
                             }
-                        }
+                        } 
 
                         row.appendChild(cell);
                         date++;
