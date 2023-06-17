@@ -6,7 +6,7 @@ body {
   height: 400px;
   /* background-color: white; */
   margin: 0 auto;
-  padding: 15px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
@@ -47,4 +47,3 @@ body {
 #calendar-table td:hover {
   background-color: #f0f0f0;
 }
-

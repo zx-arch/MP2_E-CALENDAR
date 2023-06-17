@@ -110,7 +110,7 @@ class MethodQuery {
     }
 
     public function validateImage($gbr) {
-        if (!empty($gbr)) {
+        if (!isset($gbr)) {
 
             if ($gbr['gambar']['type'] != 'image/jpeg' and $gbr['gambar']['type'] != 'image/jpg' and $gbr['gambar']['type'] != 'image/png') {
                 $this->error_image .= "* File Gambar Harus PNG atau JPG<br>";
@@ -122,13 +122,36 @@ class MethodQuery {
             return $this->error_image;
         }
     }
-
+    public function insertNewDataWithoutImage($data, $user) {
+        global $mysqli;
+        if ($this->error_date == "") {
+            if ($data['level'] == 'biasa') {
+                $data['level'] = "Biasa";
+            } elseif($data['level'] == 'sedang')  {
+                $data['level'] = 'Sedang';
+            } elseif($data['level'] == 'sangat_penting') {
+                $data['level'] = 'Sangat penting';
+            }
+            $durasi = (int) $data['durasi_jam']*60 + (int) $data['durasi_menit'];
+            $query = 
+                "INSERT INTO activity(nama,tgl_mulai,tgl_selesai,`level`,durasi,lokasi,username) VALUES (
+                '".$data['nama']."',
+                '".$data['tgl_mulai']."',
+                '".$data['tgl_selesai']."',
+                '".$data['level']."',
+                '$durasi',
+                '".$data['lokasi']."',
+                '$user'
+            )";
+            return $mysqli->query($query);
+        }
+    }
     public function insertNewData($data, $gbr, $user) {
         global $mysqli;
         $durasi = (int) $data['durasi_jam']*60 + (int) $data['durasi_menit'];
 
         if ($this->error_date == "") {
-            if (empty($gbr)) {
+            if (!isset($gbr)) {
                 $query = 
                     "INSERT INTO activity(nama,tgl_mulai,tgl_selesai,`level`,durasi,lokasi,username) VALUES (
                     '".$data['nama']."',
