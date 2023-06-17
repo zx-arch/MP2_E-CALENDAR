@@ -94,7 +94,6 @@ if (!isset($_SESSION["token_login"])) {
             <?php unset($_SESSION['tambah_berhasil']); ?>
             <?php endif; ?>
 
-<<<<<<< HEAD
             <?php endif; ?>
 
             <?php if(isset($_GET['data'])) : ?>
@@ -156,66 +155,6 @@ if (!isset($_SESSION["token_login"])) {
             <?php endif; ?>
         </div>
     </div>
-=======
-			<?php if(isset($_GET['data'])) : ?>
-				<h2 style="text-align: center;">Agenda Bulan <?= str_replace('-',' ',$_GET['data']); ?></h2><br>
-					<div class="form-group">
-						<form action="" method="post" id="formSearch">
-							<input type="text" name="search" id="search" placeholder="Search..."><br>
-						</form>
-				</div>
-				
-				<button class="button-back" onclick="window.location='index'">Kembali</button><br><br>
-				<div class="table-container">
-					<table>
-						<thead>
-							<tr>
-								<th>No</th>
-								<th>Nama Kegiatan</th>
-								<th>Tanggal Mulai</th>
-								<th>Tanggal Selesai</th>
-								<th>Level</th>
-								<th>Durasi</th>
-								<th>Lokasi</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php $i=0; ?>
-							<?php foreach($data as $dt) : ?>
-								<?php $i++; ?>
-								<tr>
-									<td><?= $i; ?></td>
-									<td><?= $dt['nama']; ?></td>
-									<td><?= $dt['tgl_mulai']; ?></td>
-									<td><?= $dt['tgl_selesai']; ?></td>
-									<td><?= $dt['level']; ?></td>
-									<td><?= round($dt['durasi']/60,0); ?> Jam <?= $dt['durasi']%60; ?> Menit</td>
-									<td><?= $dt['lokasi']; ?></td>
-									<td>
-										<div class="form-action">
-											<form action="detail" method="post">
-												<input type="hidden" name="id" value="<?= $dt['id']; ?>">
-												<input type="submit" name="detail" id="detail" class="btn-orange" value="Detail">
-											</form>
-											
-											<form action="delete" method="post">
-                                                <?php $_SESSION['token_hapus'] = bin2hex(random_bytes(32)); ?>
-                                                <input type="hidden" name="id" value="<?= $dt['id']; ?>">
-												<input type="submit" class="btn-green" value="Delete">
-											</form>
-										</div>
-									</td>
-									<!-- <td><a href="">Detail</a> | <a href="">Delete</a></td> -->
-								</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
-				</div>
-			<?php endif; ?>
-		</div>
-	</div>
->>>>>>> 29041b20dc05f23ca81c4e365f9e45d49b8aae59
     <script type="text/javascript" src="App/js/main.js"></script>
     <script src="App/js/script.js"></script>
 </body>
