@@ -166,4 +166,82 @@ class MethodQuery {
             }
         }
     }
+    
+    public function updateData($data, $gbr)
+    {
+        global $mysqli;
+        $id = $data['id'];
+        $nama = $data['nama'];
+        $tgl_mulai = $data['tgl_mulai'];
+        $tgl_selesai = $data['tgl_selesai'];
+        $level = $data['level'];
+        $durasi = (int) $data['durasi_jam']*60 + (int) $data['durasi_menit'];
+        $durasi_menit = $data['durasi_menit'];
+        $lokasi = $data['lokasi'];
+
+        // update ke data base 
+        $query = "UPDATE `activity` SET 
+        `nama` = '$nama', 
+        `tgl_mulai` = '$tgl_mulai',  
+        `tgl_selesai` = '$tgl_selesai', 
+        `level` = '$level', 
+        `durasi` = '$durasi',   
+        `lokasi` = '$lokasi'
+        WHERE `activity`.`id` = $id";
+        $mysqli->query($query);
+
+        // update dengan gambar 
+        if (!empty($gbr)) {
+            $namagbr = explode('.',$gbr['gambar']['name'])[0];
+            $ekstensigbr = explode('.',$gbr['gambar']['name'])[count(explode('.',$gbr['gambar']['name']))-1];
+
+            if ($gbr['gambar']['type'] == 'image/jpeg' or $gbr['gambar']['type'] == 'image/jpg' or $gbr['gambar']['type'] == 'image/png') {
+                if ($gbr['gambar']['size'] <= 512000) {
+                    $uniqname = $namagbr.bin2hex(random_bytes(16)).'-'.rand().'.'.$ekstensigbr;
+                    
+                    move_uploaded_file($gbr['gambar']['tmp_name'],'App/img/'.$uniqname);
+
+                    $query = "UPDATE `activity` SET 
+                    `nama` = '$nama', 
+                    `tgl_mulai` = '$tgl_mulai',  
+                    `tgl_selesai` = '$tgl_selesai', 
+                    `level` = '$level', 
+                    `durasi` = '$durasi',  
+                    `gambar` = '$uniqname',  
+                    `lokasi` = '$lokasi'
+                    WHERE `activity`.`id` = $id";
+
+                    return $mysqli->query($query);
+                }
+            }
+        }
+
+    }
+
+    public function delete($data) {
+        global $mysqli;
+        $query = 'DELETE FROM `activity` WHERE `activity`.`id` = '.$data.'';
+        return $mysqli->query($query);
+    }
+
+    public function getRentangTanggal($account) {
+        global $mysqli;
+        $query = "SELECT tgl_mulai, tgl_selesai FROM activity WHERE username='$account'";
+        $result = $mysqli->query($query);
+        $data = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $tgl_mulai = explode('-', $row['tgl_mulai']);
+                $tgl_selesai = explode('-', $row['tgl_selesai']);
+                $data[] = [
+                    'tahun' => (int) $tgl_mulai[0],
+                    'bulan' => (int) $tgl_mulai[1] - 1, // Mengurangi 1 karena index bulan dimulai dari 0
+                    'tgl_mulai' => (int) $tgl_mulai[2],
+                    'tgl_selesai' => (int) $tgl_selesai[2]
+                ];
+            }
+        }
+        return $data;
+    }
+
 }
