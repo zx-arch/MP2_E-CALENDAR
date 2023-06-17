@@ -39,7 +39,7 @@ function generateCalendar() {
                         let cell = document.createElement('td');
                         cell.innerHTML = date;
 
-                        // Periksa apakah tanggal saat ini berada dalam salah satu rentang tanggal
+                        // Periksa apakah tanggal saat ini berada dalam salah satu rentang tanggal,
                         for (let k = 0; k < rentangTanggal.length; k++) {
                             let { tahun, bulan, tgl_mulai, tgl_selesai } =
                                 rentangTanggal[k];
@@ -52,7 +52,7 @@ function generateCalendar() {
                                 cell.style.background = 'lightblue';
                                 break; // Hentikan perulangan jika gaya sudah diberikan
                             }
-                        } 
+                        }
 
                         row.appendChild(cell);
                         date++;
