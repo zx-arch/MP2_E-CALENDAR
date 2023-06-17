@@ -11,6 +11,7 @@ if (!isset($_SESSION["token_login"])) {
 	$getdate = "";
 
 	if (isset($_GET['data'])) {
+		$_SESSION['getmonth'] = $_GET['data'];
 		if ($_GET['data'] !== '' and strlen($_GET['data']) !== 0) {
 			if (strpos($_GET['data'],'-')) {
 				$getyear = (string) explode("-",$_GET['data'])[1] . '-';
