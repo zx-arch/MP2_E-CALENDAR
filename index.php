@@ -31,7 +31,7 @@ if (!isset($_SESSION["token_login"])) {
     }
 
 	if (isset($_POST['search'])) {
-		
+		$data = $methodquery->getDataBySearch($_SESSION['username'], $getdate, $_POST['search']);
 	} else {
 		$data = $methodquery->getAll($_SESSION['username'], $getdate);
 	}
@@ -101,11 +101,17 @@ if (!isset($_SESSION["token_login"])) {
             <h2 style="text-align: center;">Agenda Bulan <?= str_replace('-',' ',$_GET['data']); ?></h2><br>
             <div class="form-group">
                 <form action="" method="post" id="formSearch">
-                    <input type="text" name="search" id="search" placeholder="Search..."><br>
+                    <?php if(!isset($_POST['search'])) : ?>
+                    <input type="text" name="search" id="search" placeholder="Cari berdasarkan nama atau tanggal.."><br>
+                    <?php elseif(isset($_POST['search'])) : ?>
+                    <input type="text" name="search" id="search" value="<?= $_POST['search']; ?>"><br>
+                    <?php endif; ?>
                 </form>
             </div>
 
             <button class="button-back" onclick="window.location='index'">Kembali</button><br><br>
+
+            <?php if(mysqli_fetch_assoc($data) > 0) : ?>
             <div class="table-container">
                 <table>
                     <thead>
@@ -126,6 +132,7 @@ if (!isset($_SESSION["token_login"])) {
                         <?php $i++; ?>
                         <tr>
                             <td><?= $i; ?></td>
+                            <?php ?>
                             <td><?= $dt['nama']; ?></td>
                             <td><?= $dt['tgl_mulai']; ?></td>
                             <td><?= $dt['tgl_selesai']; ?></td>
@@ -153,6 +160,10 @@ if (!isset($_SESSION["token_login"])) {
                     </tbody>
                 </table>
             </div>
+            <?php else : ?>
+            <h3 style="color: red;">* Data Pencarian "<?= $_POST['search']; ?>" Tidak Ditemukan</h3>
+            <?php endif; ?>
+
             <?php endif; ?>
         </div>
     </div>
