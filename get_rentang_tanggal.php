@@ -3,8 +3,8 @@
 require_once "App/backend/query.php";
 
 $methodQuery = new MethodQuery();
-$account = "zaki";
-$rentangTanggal = $methodQuery->getRentangTanggal($account);
+
+$rentangTanggal = $methodQuery->getRentangTanggal($_SESSION['username']);
 
 // Mengatur header untuk mengindikasikan bahwa respons adalah JSON
 header('Content-Type: application/json');
