@@ -3,10 +3,10 @@ body {
 }
 .calendar {
   max-width: 500px;
-  height: 500px;
+  height: 400px;
   /* background-color: white; */
   margin: 0 auto;
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }

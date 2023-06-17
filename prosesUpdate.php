@@ -9,7 +9,9 @@ if (!isset($_SESSION["token_update"])) {
     $error_date = "";
     $error_image = "";
     if (isset($_POST['simpan'])) {
+
         $methodquery->updateData($_POST, $_FILES);
+
         header('Location: index');
     }
 }

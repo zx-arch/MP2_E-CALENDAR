@@ -26,6 +26,16 @@ class MethodQuery {
         return $result;
 	}
 
+    public function getDataBySearch($account, $tgl, $search) {
+		global $mysqli;
+		$query="SELECT * FROM activity WHERE username='$account' and tgl_mulai LIKE '$tgl%'
+        and nama LIKE '%$search%' or tgl_mulai LIKE '%$search%' or tgl_selesai LIKE '%$search%' or lokasi LIKE '%$search%'
+        ";
+		$data=array();
+		$result=$mysqli->query($query);
+        return $result;
+	}
+
     public function getDataById($account, $id) {
 		global $mysqli;
 		$query="SELECT * FROM activity WHERE username='$account' and id='$id'";
