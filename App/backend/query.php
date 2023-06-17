@@ -167,11 +167,7 @@ class MethodQuery {
         }
     }
     
-<<<<<<< HEAD
     public function updateData($data, $gbr)
-=======
-    public function updateData($data)
->>>>>>> 29041b20dc05f23ca81c4e365f9e45d49b8aae59
     {
         global $mysqli;
         $id = $data['id'];
@@ -183,7 +179,6 @@ class MethodQuery {
         $durasi_menit = $data['durasi_menit'];
         $lokasi = $data['lokasi'];
 
-<<<<<<< HEAD
         // update ke data base 
         $query = "UPDATE `activity` SET 
         `nama` = '$nama', 
@@ -221,16 +216,6 @@ class MethodQuery {
             }
         }
 
-=======
-        $query = "UPDATE `activity` SET `nama` = '$nama', 
-        `tgl_mulai` = '$tgl_mulai',  
-        `tgl_selesai` = '$tgl_selesai', 
-        `level` = '$level', 
-        `durasi` = '$durasi',  
-        `lokasi` = '$lokasi'
-        WHERE `activity`.`id` = $id";
-        return $mysqli->query($query);
->>>>>>> 29041b20dc05f23ca81c4e365f9e45d49b8aae59
     }
 
     public function delete($data) {
@@ -238,7 +223,6 @@ class MethodQuery {
         $query = 'DELETE FROM `activity` WHERE `activity`.`id` = '.$data.'';
         return $mysqli->query($query);
     }
-<<<<<<< HEAD
 
     public function getRentangTanggal($account) {
         global $mysqli;
@@ -260,6 +244,4 @@ class MethodQuery {
         return $data;
     }
 
-=======
->>>>>>> 29041b20dc05f23ca81c4e365f9e45d49b8aae59
 }
