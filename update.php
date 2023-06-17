@@ -28,28 +28,29 @@ if (!isset($_SESSION["token_login"])) {
 
     <h1>Update Agenda</h1>
     <div class="form-container">
-        <form action="prosesUpdate" method="post" enctype="multipart/form-data">
-            <form action="prosesUpdate" method="post">
-                <?php $_SESSION['token_update'] = bin2hex(random_bytes(32)); ?>
-                <div class="form-group">
-                    <label for="nama">Nama:</label>
-                    <input type="text" name="nama" id="nama" value="<?= $data['nama'] ?>">
-                </div>
 
-                <div class="form-group">
-                    <label for="tgl_mulai">Tanggal mulai:</label>
-                    <input type="date" name="tgl_mulai" id="tgl_mulai" value="<?= $data['tgl_mulai'] ?>">
-                </div>
+        <form action="prosesUpdate" method="post" enctype="multipart/form-data">    
+            <?php $_SESSION['token_update'] = bin2hex(random_bytes(32)); ?>
+            <div class="form-group">
+                <label for="nama">Nama:</label>
+                <input type="text" name="nama" id="nama" value="<?= $data['nama'] ?>">
+            </div>
 
-                <div class="form-group">
-                    <label for="tgl_selesai">Tanggal selesai:</label>
-                    <input type="date" name="tgl_selesai" id="tgl_selesai" value="<?= $data['tgl_selesai'] ?>">
-                </div>
+            <div class="form-group">
+                <label for="tgl_mulai">Tanggal mulai:</label>
+                <input type="date" name="tgl_mulai" id="tgl_mulai" value="<?= $data['tgl_mulai'] ?>">
+            </div>
 
-                <div class="form-group">
-                    <label for="level">Level:</label>
+            <div class="form-group">
+                <label for="tgl_selesai">Tanggal selesai:</label>
+                <input type="date" name="tgl_selesai" id="tgl_selesai" value="<?= $data['tgl_selesai'] ?>">
+            </div>
 
-                    <?php if($data['level'] == 'Biasa') : ?>
+            <div class="form-group">
+                <label for="level">Level:</label>
+
+                <?php if($data['level'] == 'Biasa') : ?>
+
                     <input type="radio" name="level" checked id="level" value="biasa"> Biasa
                     <input type="radio" name="level" id="level" value="Sedang"> Sedang
                     <input type="radio" name="level" id="level" value="sangat_penting"> Sangat penting
@@ -90,8 +91,16 @@ if (!isset($_SESSION["token_login"])) {
 
             <form action="detail" method="post">
                 <input type="hidden" name="id" id="id" value="<?= $data['id']; ?>">
-                <input type="submit" class="button-back" value="Kembali">
-            </form>
+
+                <input type="submit" name="simpan" id="simpan" value="Simpan">
+            </div>
+        </form>
+        
+        <form action="detail" method="post">
+            <input type="hidden" name="id" id="id" value="<?= $data['id']; ?>">
+            <input type="submit" class="button-back" value="Kembali">
+        </form>
+
 
     </div>
 

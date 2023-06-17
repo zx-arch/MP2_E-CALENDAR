@@ -6,6 +6,7 @@ $methodQuery = new MethodQuery();
 
 $rentangTanggal = $methodQuery->getRentangTanggal($_SESSION['username']);
 
+
 // Mengatur header untuk mengindikasikan bahwa respons adalah JSON
 header('Content-Type: application/json');
 
